@@ -9,14 +9,7 @@ router.get("/", (req, res) => {
 });
 
 router.post("/", (req, res) => {
-  res.send("Post on Videos Page");
+  res.send(videosJSON);
 });
 
 module.exports = router;
-
-{
-  /* <Route path="/videos" element={<HomePage />} />
-<Route path="/videos/:id" element={<HomePage />} />
-<Route path="/upload" element={<UploadPage />} />
-<Route path="*" element={<NotFoundPage />} /> */
-}

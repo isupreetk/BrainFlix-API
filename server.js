@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const videosRouter = require("./routes/videosRouter");
-const selectedVideosRouter = require("./routes/selectedVideoRouter");
+const selectedVideoRouter = require("./routes/selectedVideoRouter");
 const uploadRouter = require("./routes/uploadRouter");
 const notFoundRouter = require("./routes/notFoundRouter");
 
@@ -12,7 +12,7 @@ const port = process.env.PORT;
 
 app.use(cors());
 app.use("/videos", videosRouter);
-app.use("/videos/:id", selectedVideosRouter);
+app.use("/videos", selectedVideoRouter);
 app.use("/upload", uploadRouter);
 app.use("*", notFoundRouter);
 
