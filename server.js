@@ -11,9 +11,10 @@ const port = process.env.PORT;
 
 app.use(cors());
 app.use(express.static("public"));
+app.use(express.json());
 
 app.use("/videos", videosRouter);
-app.use("/upload", uploadRouter);
+app.use("/", uploadRouter);
 app.use("*", notFoundRouter);
 
 app.get("/", (req, res) => {
