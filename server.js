@@ -2,7 +2,6 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const videosRouter = require("./routes/videosRouter");
-const selectedVideoRouter = require("./routes/selectedVideoRouter");
 const uploadRouter = require("./routes/uploadRouter");
 const notFoundRouter = require("./routes/notFoundRouter");
 
@@ -11,8 +10,9 @@ require("dotenv").config();
 const port = process.env.PORT;
 
 app.use(cors());
+app.use(express.static("public"));
+
 app.use("/videos", videosRouter);
-app.use("/videos", selectedVideoRouter);
 app.use("/upload", uploadRouter);
 app.use("*", notFoundRouter);
 
