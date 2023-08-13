@@ -4,6 +4,11 @@ const fs = require("fs");
 // const { stringify } = require("querystring");
 const { v4: uuid } = require("uuid");
 
+require("dotenv").config();
+
+const port = process.env.PORT;
+const api_URL = process.env.API_URL;
+
 const videosJSON = fs.readFileSync("./data/videos.json");
 const videosObj = JSON.parse(videosJSON);
 
@@ -19,7 +24,7 @@ router.post("/", (req, res) => {
     id: uuid(),
     title: videoTitle,
     channel: "Mohan Muruge",
-    image: "http://localhost:8080/images/image0.jpeg",
+    image: `${api_URL}/images/image0.jpeg`,
     description: videoDescription,
     views: 0,
     likes: 0,
@@ -63,7 +68,7 @@ router.post("/:id/comments", (req, res) => {
     return video.id === id;
   });
 
-  console.log(selectedVideoObj);
+  // console.log(selectedVideoObj);
 
   const selectedVideoCommentsObj = selectedVideoObj.comments;
   // console.log(selectedVideoCommentsObj);
@@ -75,13 +80,13 @@ router.post("/:id/comments", (req, res) => {
   // const selectedVideoCommentsJSON = JSON.stringify(selectedVideoCommentsObj);
   // console.log(selectedVideoCommentsJSON);
 
-  const updatedSelectedVideoCommentsObj =
-    // selectedVideoCommentsObj.push(
-    //   // { ...comments, response.data }
-    //   comment
-    // );
+  // const updatedSelectedVideoCommentsObj =
+  // selectedVideoCommentsObj.push(
+  //   // { ...comments, response.data }
+  //   comment
+  // );
 
-    selectedVideoCommentsObj.push(newComment);
+  selectedVideoCommentsObj.push(newComment);
   console.log(selectedVideoCommentsObj);
 
   console.log(selectedVideoObj);
