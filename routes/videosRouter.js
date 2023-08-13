@@ -82,4 +82,35 @@ router.post("/:id/comments", (req, res) => {
   res.json(videosString);
 });
 
+router.delete("/:id/comments/:commentId", (req, res) => {
+  const { id, commentId } = req.params;
+
+  const selectedVideoObj = videosObj.find((video) => {
+    return video.id === id;
+  });
+
+  const selectedVideoCommentsObj = selectedVideoObj.comments;
+
+  const selectedCommentObj = selectedVideoCommentsObj.find((comment) => {
+    return comment.id === commentId;
+  });
+
+  let updatedSelectedVideoCommentsObj = selectedVideoCommentsObj.filter(
+    (comment) => {
+      return comment.id !== selectedCommentObj.id;
+    }
+  );
+
+  selectedVideoObj.comments = updatedSelectedVideoCommentsObj;
+
+  let updatedSelectedVideoString = JSON.stringify(selectedVideoObj);
+
+  videosObj[{ id }] = selectedVideoObj;
+
+  videosString = JSON.stringify(videosObj);
+  console.log(videosString);
+  fs.writeFileSync("./data/videos.json", videosString);
+  res.json(videosString);
+});
+
 module.exports = router;
