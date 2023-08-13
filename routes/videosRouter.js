@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const fs = require("fs");
-// const { stringify } = require("querystring");
 const { v4: uuid } = require("uuid");
 
 require("dotenv").config();
@@ -18,7 +17,6 @@ router.get("/", (req, res) => {
 
 router.post("/", (req, res) => {
   const { videoTitle, videoDescription } = req.body;
-  console.log(videoTitle, videoDescription);
 
   const uploadedVideo = {
     id: uuid(),
@@ -108,7 +106,21 @@ router.delete("/:id/comments/:commentId", (req, res) => {
   videosObj[{ id }] = selectedVideoObj;
 
   videosString = JSON.stringify(videosObj);
-  console.log(videosString);
+  fs.writeFileSync("./data/videos.json", videosString);
+  res.json(videosString);
+});
+
+router.put("/:id/likes", (req, res) => {
+  const { id } = req.params;
+
+  const selectedVideoObj = videosObj.find((video) => {
+    return video.id === id;
+  });
+
+  selectedVideoObj.likes = String(Number(selectedVideoObj.likes) + 1);
+
+  videosObj[{ id }] = selectedVideoObj;
+  videosString = JSON.stringify(videosObj);
   fs.writeFileSync("./data/videos.json", videosString);
   res.json(videosString);
 });
