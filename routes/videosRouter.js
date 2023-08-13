@@ -10,7 +10,7 @@ const port = process.env.PORT;
 const api_URL = process.env.API_URL;
 
 const videosJSON = fs.readFileSync("./data/videos.json");
-const videosObj = JSON.parse(videosJSON);
+let videosObj = JSON.parse(videosJSON);
 
 router.get("/", (req, res) => {
   res.send(videosJSON);
@@ -29,7 +29,7 @@ router.post("/", (req, res) => {
     views: 0,
     likes: 0,
     duration: "01.10",
-    video: "https://project-2-api.herokuapp.com/stream",
+    video: `${api_URL}/videos/BrainStation_Sample_Video.mp4`,
     timestamp: Date.now(),
     comments: [],
   };
@@ -54,49 +54,32 @@ router.get("/:id", (req, res) => {
 });
 
 router.post("/:id/comments", (req, res) => {
-  // console.log(req.body);
   const { id } = req.params;
 
-  // const { comment } = req.body;
-  // console.log(comment);
   const newComment = {
+    id: uuid(),
     name: req.body.name,
     comment: req.body.comment,
+    likes: 0,
+    timestamp: Date.now(),
   };
 
   const selectedVideoObj = videosObj.find((video) => {
     return video.id === id;
   });
 
-  // console.log(selectedVideoObj);
-
   const selectedVideoCommentsObj = selectedVideoObj.comments;
-  // console.log(selectedVideoCommentsObj);
-
-  // const selectedVideoCommentsObj = selectedVideoObj.map((video) => {
-  // return (: video.comments);
-  // });
-
-  // const selectedVideoCommentsJSON = JSON.stringify(selectedVideoCommentsObj);
-  // console.log(selectedVideoCommentsJSON);
-
-  // const updatedSelectedVideoCommentsObj =
-  // selectedVideoCommentsObj.push(
-  //   // { ...comments, response.data }
-  //   comment
-  // );
 
   selectedVideoCommentsObj.push(newComment);
-  console.log(selectedVideoCommentsObj);
 
-  console.log(selectedVideoObj);
+  selectedVideoObj.comments = selectedVideoCommentsObj;
 
-  fs.writeFileSync("./data/videos.json");
+  videosObj[{ id }] = selectedVideoObj;
 
-  // const selectedVideoObj = JSON.parse(selectedVideoJSON);
+  videosString = JSON.stringify(videosObj);
 
-  // selectedVideoObj.comments.push([...selectedVideoObj.comments], response.data);
-  // res.send(selectedVideoObj);
+  fs.writeFileSync("./data/videos.json", videosString);
+  res.json(videosString);
 });
 
 module.exports = router;
