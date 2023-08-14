@@ -7,6 +7,7 @@ require("dotenv").config();
 
 const port = process.env.PORT;
 const api_URL = process.env.API_URL;
+const image_destination = process.env.IMAGE_DESTINATION;
 
 const videosJSON = fs.readFileSync("./data/videos.json");
 let videosObj = JSON.parse(videosJSON);
@@ -29,10 +30,7 @@ router.post("/", (req, res) => {
 
   if (!videoImage) return res.status(400);
 
-  videoImage.mv(
-    "/Users/manmeetsingh/Desktop/BrainStation_React/brainflix-api/public/images/" +
-      videoImage.name
-  );
+  videoImage.mv(image_destination + videoImage.name);
 
   res.status(200);
 
