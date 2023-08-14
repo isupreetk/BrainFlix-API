@@ -7,27 +7,43 @@ require("dotenv").config();
 
 const port = process.env.PORT;
 const api_URL = process.env.API_URL;
+const image_destination = process.env.IMAGE_DESTINATION;
 
 const videosJSON = fs.readFileSync("./data/videos.json");
 let videosObj = JSON.parse(videosJSON);
 
 router.get("/", (req, res) => {
-  res.send(videosJSON);
+  const videosEnvJSON = videosObj.map((video) => {
+    const newVideo = { ...video };
+    newVideo.image = `${api_URL}/images/${video.image}`;
+    newVideo.video = `${api_URL}/videos/${video.video}`;
+
+    return newVideo;
+  });
+
+  res.send(videosEnvJSON);
 });
 
 router.post("/", (req, res) => {
   const { videoTitle, videoDescription } = req.body;
+  const { videoImage } = req.files;
+
+  if (!videoImage) return res.status(400);
+
+  videoImage.mv(image_destination + videoImage.name);
+
+  res.status(200);
 
   const uploadedVideo = {
     id: uuid(),
     title: videoTitle,
     channel: "Mohan Muruge",
-    image: `${api_URL}/images/image0.jpeg`,
+    image: `${videoImage.name}`,
     description: videoDescription,
     views: 0,
     likes: 0,
     duration: "01.10",
-    video: `${api_URL}/videos/BrainStation_Sample_Video.mp4`,
+    video: `BrainStation_Sample_Video.mp4`,
     timestamp: Date.now(),
     comments: [],
   };
@@ -40,12 +56,18 @@ router.post("/", (req, res) => {
 
 router.get("/:id", (req, res) => {
   const { id } = req.params;
+
   const selectedVideoJSON = videosObj.find((video) => {
     return video.id === id;
   });
 
   if (selectedVideoJSON) {
-    res.json(selectedVideoJSON);
+    const selectedVideo = { ...selectedVideoJSON };
+
+    selectedVideo.image = `${api_URL}/images/${selectedVideoJSON.image}`;
+    selectedVideo.video = `${api_URL}/videos/${selectedVideoJSON.video}`;
+
+    res.json(selectedVideo);
   } else {
     res.status(404).send("Video Not Found");
   }
