@@ -2,7 +2,6 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const videosRouter = require("./routes/videosRouter");
-const uploadRouter = require("./routes/uploadRouter");
 const notFoundRouter = require("./routes/notFoundRouter");
 
 require("dotenv").config();
