@@ -3,7 +3,7 @@ const app = express();
 const cors = require("cors");
 const fileUpload = require("express-fileupload");
 const videosRouter = require("./routes/videosRouter");
-const notFoundRouter = require("./routes/notFoundRouter");
+// const notFoundRouter = require("./routes/notFoundRouter");
 
 require("dotenv").config();
 
@@ -15,7 +15,7 @@ app.use(express.static("public"));
 app.use(express.json());
 
 app.use("/videos", videosRouter);
-app.use("*", notFoundRouter);
+// app.use("*", notFoundRouter);
 
 app.get("/", (req, res) => {
   res.send("Connected to server");
